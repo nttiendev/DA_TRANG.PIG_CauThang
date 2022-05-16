@@ -1,0 +1,23 @@
+--cpu Cortex-M3
+"da_dencauthangthongminh\startup_stm32f103x6.o"
+"da_dencauthangthongminh\main.o"
+"da_dencauthangthongminh\stm32f1xx_it.o"
+"da_dencauthangthongminh\stm32f1xx_hal_msp.o"
+"da_dencauthangthongminh\stm32f1xx_hal_gpio_ex.o"
+"da_dencauthangthongminh\stm32f1xx_hal_tim.o"
+"da_dencauthangthongminh\stm32f1xx_hal_tim_ex.o"
+"da_dencauthangthongminh\stm32f1xx_hal.o"
+"da_dencauthangthongminh\stm32f1xx_hal_rcc.o"
+"da_dencauthangthongminh\stm32f1xx_hal_rcc_ex.o"
+"da_dencauthangthongminh\stm32f1xx_hal_gpio.o"
+"da_dencauthangthongminh\stm32f1xx_hal_dma.o"
+"da_dencauthangthongminh\stm32f1xx_hal_cortex.o"
+"da_dencauthangthongminh\stm32f1xx_hal_pwr.o"
+"da_dencauthangthongminh\stm32f1xx_hal_flash.o"
+"da_dencauthangthongminh\stm32f1xx_hal_flash_ex.o"
+"da_dencauthangthongminh\stm32f1xx_hal_exti.o"
+"da_dencauthangthongminh\system_stm32f1xx.o"
+--strict --scatter "DA_dencauthangthongminh\DA_dencauthangthongminh.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "DA_dencauthangthongminh.map" -o DA_dencauthangthongminh\DA_dencauthangthongminh.axf
