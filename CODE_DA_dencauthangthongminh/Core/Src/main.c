@@ -36,6 +36,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+uint32_t TT_time_watting = 2000u;
+uint32_t TT_time_step = 100u;
 
 /* USER CODE END PM */
 
@@ -64,8 +66,8 @@ void TT_effect_init()
 
 void TT_set_effect_led(uint32_t data)
 {
-  HAL_GPIO_WritePin(b2_GPIO_Port, b2_Pin, (GPIO_PinState)((data >> 0) & 0x1));
-  HAL_GPIO_WritePin(b1_GPIO_Port, b1_Pin, (GPIO_PinState)((data >> 1) & 0x1));
+  HAL_GPIO_WritePin(b1_GPIO_Port, b1_Pin, (GPIO_PinState)((data >> 0) & 0x1));
+  HAL_GPIO_WritePin(b2_GPIO_Port, b2_Pin, (GPIO_PinState)((data >> 1) & 0x1));
   HAL_GPIO_WritePin(b3_GPIO_Port, b3_Pin, (GPIO_PinState)((data >> 2) & 0x1));
   HAL_GPIO_WritePin(b4_GPIO_Port, b4_Pin, (GPIO_PinState)((data >> 3) & 0x1));
   HAL_GPIO_WritePin(b5_GPIO_Port, b5_Pin, (GPIO_PinState)((data >> 4) & 0x1));
@@ -122,57 +124,55 @@ void TT_effect(uint32_t time, uint32_t wait_time)
 }
 
 
-void TT_effect1() // bat tren xuong
+void TT_effect1() // bat duoi len
 {
   uint16_t led = 0;
-  uint8_t count = 0;
-  while (led != 0x3FF)
+  for(int i = 0; i<=10; i++)
   {
-    HAL_Delay(100);
-    led |= 1 << count;  
+    HAL_Delay(TT_time_step);
     TT_set_effect_led(led);
-    count++;
+    led |= 1 << i;
   }
 }
-void TT_effect2() // tat tren xuong
+void TT_effect2() // tat duoi len
 {
   uint16_t led = 0x3FF;
-  while(led != 0)
+  for(int i = 0; i<=10; i++)
   {
-    HAL_Delay(100);
-    led = led << 1;
+    HAL_Delay(TT_time_step);
     TT_set_effect_led(led);
+    led &= ~(1 << i);
   }
 }
 
-void TT_effect3() // bat duoi len
+void TT_effect3() // bat tren xuong
 {
-  uint32_t led = (0x3FF << 10);
-  while (led != 0x3FF)
+  uint16_t led = 0;
+  for(int i = 0; i<=10; i++)
   {
-    HAL_Delay(100);
-    led = led >> 1;
+    HAL_Delay(TT_time_step);
     TT_set_effect_led(led);
+    led |= (0x200) >> i;
   }
 }
 
-void TT_effect4() // tat duoi len
+void TT_effect4() // tat tren xuong
 {
-  uint16_t led = 0x3FF;
-  while(led != 0)
-  {
-    HAL_Delay(100);
-    led = led >> 1;
-    TT_set_effect_led(led);
-  }
+    uint16_t led = 0x3FF;
+    for(int i = 0; i<=10; i++)
+    {
+        HAL_Delay(TT_time_step);
+        TT_set_effect_led(led);
+        led &= ~(0x200 >> i);
+    }
 }
 
 void TT_effect5() //sang so le
 {
     TT_set_effect_led(0x5555u);
-    HAL_Delay(1000);
+    HAL_Delay(TT_time_step);
     TT_set_effect_led(0xAAAAu);
-    HAL_Delay(1000);
+    HAL_Delay(TT_time_step);
 }
 void TT_dim_light(void)
 {
@@ -187,6 +187,8 @@ void TT_dim_light(void)
   HAL_GPIO_TogglePin(b9_GPIO_Port, b9_Pin);
   HAL_GPIO_TogglePin(b10_GPIO_Port, b10_Pin);
 }
+
+
 
 /* USER CODE END 0 */
 
@@ -221,7 +223,6 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   TT_effect_init();
-  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -233,39 +234,42 @@ int main(void)
       
       
 //    effect1(70, 300);
-    if(HAL_GPIO_ReadPin(cb_tren_GPIO_Port, cb_tren_Pin) == GPIO_PIN_RESET)
+
+    if(HAL_GPIO_ReadPin(cb_tren_GPIO_Port, cb_tren_Pin) == GPIO_PIN_RESET) // duoi len
     {
-        HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
+//        HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
         TT_effect1();
-        HAL_Delay(1000);
+        HAL_Delay(TT_time_watting);
         TT_effect2();
+        TT_set_effect_led(0);
     }
-    else if (HAL_GPIO_ReadPin(cb_duoi_GPIO_Port, cb_duoi_Pin) == GPIO_PIN_RESET)
+    else if (HAL_GPIO_ReadPin(cb_duoi_GPIO_Port, cb_duoi_Pin) == GPIO_PIN_RESET) //tren xuong
     {
-        HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
+//        HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
         TT_effect3();
-        HAL_Delay(1000);
+        HAL_Delay(TT_time_watting);
         TT_effect4();
+        TT_set_effect_led(0);
     }
     else
     {
-//        if (HAL_GPIO_ReadPin(cb_as_GPIO_Port,cb_as_Pin) == GPIO_PIN_RESET)
-//        {
-            if(HAL_GPIO_ReadPin(cb_cd_GPIO_Port,cb_cd_Pin) == GPIO_PIN_SET)
+        if (HAL_GPIO_ReadPin(cb_as_GPIO_Port,cb_as_Pin) == GPIO_PIN_SET)
+        {
+            if(HAL_GPIO_ReadPin(cb_cd_GPIO_Port,cb_cd_Pin) == GPIO_PIN_RESET)
             {
-                HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
-                TT_effect5();
+//                HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
+                TT_set_effect_led(0x3FF);
             }
             else
             {
-                HAL_TIM_PWM_Start_IT(&htim2,TIM_CHANNEL_1);
+                TT_set_effect_led(0u);
             }
-//        }
-//        else
-//        {
+        }
+        else
+        {
 //            HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
-//            TT_set_effect_led(0xFFFFu);
-//        }
+            TT_set_effect_led(0u);
+        }
     }
 
     /* USER CODE END WHILE */
