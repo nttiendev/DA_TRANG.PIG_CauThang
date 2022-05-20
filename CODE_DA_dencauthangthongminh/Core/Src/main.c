@@ -129,9 +129,9 @@ void TT_effect1() // bat duoi len
   uint16_t led = 0;
   for(int i = 0; i<=10; i++)
   {
-    HAL_Delay(TT_time_step);
     TT_set_effect_led(led);
     led |= 1 << i;
+    HAL_Delay(TT_time_step);
   }
 }
 void TT_effect2() // tat duoi len
@@ -139,9 +139,10 @@ void TT_effect2() // tat duoi len
   uint16_t led = 0x3FF;
   for(int i = 0; i<=10; i++)
   {
-    HAL_Delay(TT_time_step);
     TT_set_effect_led(led);
     led &= ~(1 << i);
+    HAL_Delay(TT_time_step);
+
   }
 }
 
@@ -150,9 +151,9 @@ void TT_effect3() // bat tren xuong
   uint16_t led = 0;
   for(int i = 0; i<=10; i++)
   {
-    HAL_Delay(TT_time_step);
     TT_set_effect_led(led);
     led |= (0x200) >> i;
+    HAL_Delay(TT_time_step);
   }
 }
 
@@ -161,9 +162,9 @@ void TT_effect4() // tat tren xuong
     uint16_t led = 0x3FF;
     for(int i = 0; i<=10; i++)
     {
-        HAL_Delay(TT_time_step);
         TT_set_effect_led(led);
         led &= ~(0x200 >> i);
+        HAL_Delay(TT_time_step);
     }
 }
 
@@ -229,11 +230,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-/*                      <3 Trang pig -- pisces girl <3                        */
-/*                                    3000                                    */
-      
-      
-//    effect1(70, 300);
+/*                      < Trang pig -- pisces girl >                       */
 
     if(HAL_GPIO_ReadPin(cb_tren_GPIO_Port, cb_tren_Pin) == GPIO_PIN_RESET) // duoi len
     {
@@ -251,7 +248,7 @@ int main(void)
         TT_effect4();
         TT_set_effect_led(0);
     }
-    else
+    else 
     {
         if (HAL_GPIO_ReadPin(cb_as_GPIO_Port,cb_as_Pin) == GPIO_PIN_SET)
         {

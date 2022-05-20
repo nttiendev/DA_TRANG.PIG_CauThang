@@ -53,6 +53,12 @@
 /* USER CODE BEGIN 0 */
 extern void TT_dim_light(void);
 extern void TT_set_effect_led(uint32_t data);
+extern uint32_t TT_time_watting;
+extern uint32_t TT_time_step;
+uint8_t count = 0;
+extern void TT_set_effect_led(uint32_t data);
+
+#define DELAY 1000
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -261,7 +267,87 @@ void TIM2_IRQHandler(void)
 void EXTI15_10_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
-
+  if(HAL_GPIO_ReadPin(btn1_GPIO_Port,btn1_Pin) == GPIO_PIN_RESET)
+  {
+      TT_time_step = TT_time_step + 1000;
+      if(TT_time_step > 4100)
+      {
+          TT_time_step = 100;
+      }
+      switch(TT_time_step)
+      {
+          case 100: 
+          TT_set_effect_led(0x200);
+          HAL_Delay(DELAY);
+        TT_set_effect_led(0);
+            break;
+          case 1100: 
+            TT_set_effect_led(0x300);
+            HAL_Delay(DELAY);
+                  TT_set_effect_led(0);
+            break;
+          case 2100: 
+            TT_set_effect_led(0x380);
+            HAL_Delay(DELAY);
+                  TT_set_effect_led(0);
+            break;
+          case 3100: 
+            TT_set_effect_led(0x3C0);
+            HAL_Delay(DELAY);
+                  TT_set_effect_led(0);
+            break;
+          case 4100: 
+            TT_set_effect_led(0x3E0);
+            HAL_Delay(DELAY);
+                  TT_set_effect_led(0);
+            break;
+          default:
+            break;
+      }
+  }
+  if(HAL_GPIO_ReadPin(btn2_GPIO_Port,btn2_Pin) == GPIO_PIN_RESET)
+  {
+      count++;
+      if(count > 4)
+      {
+          count = 0;
+      }
+      switch(count)
+      {
+          case 0: 
+            TT_time_watting = 5000u;
+          TT_set_effect_led(0x200);
+          HAL_Delay(DELAY);
+          TT_set_effect_led(0);
+            break;
+          case 1: 
+            TT_time_watting = 10000u; 
+            TT_set_effect_led(0x300);
+            HAL_Delay(DELAY);
+          TT_set_effect_led(0);
+            break;
+          case 2: 
+            TT_time_watting = 20000u; 
+            TT_set_effect_led(0x380);
+            HAL_Delay(DELAY);
+          TT_set_effect_led(0);
+            break;
+          case 3: 
+            TT_time_watting = 30000u; 
+            TT_set_effect_led(0x3C0);
+            HAL_Delay(DELAY);
+                  TT_set_effect_led(0);
+            break;
+          case 4: 
+            TT_time_watting = 60000u; 
+            TT_set_effect_led(0x3E0);
+            HAL_Delay(DELAY);
+                  TT_set_effect_led(0);
+            break;
+          default:
+            break;
+      }
+  }
   /* USER CODE END EXTI15_10_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(cb_tren_Pin);
   HAL_GPIO_EXTI_IRQHandler(cb_duoi_Pin);
