@@ -255,7 +255,7 @@ int main(void)
     {
         if (HAL_GPIO_ReadPin(cb_as_GPIO_Port,cb_as_Pin) == GPIO_PIN_SET)
         {
-            if(HAL_GPIO_ReadPin(cb_cd_GPIO_Port,cb_cd_Pin) == GPIO_PIN_RESET)
+            if(HAL_GPIO_ReadPin(cb_cd_GPIO_Port,cb_cd_Pin) == GPIO_PIN_SET)
             {
 //                HAL_TIM_PWM_Stop_IT(&htim2,TIM_CHANNEL_1);
                 TT_set_effect_led(0x3FF);
